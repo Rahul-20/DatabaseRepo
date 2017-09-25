@@ -1,0 +1,42 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `BayStatusUpdation`(in fp varchar(25),in st varchar(25),in bno int)
+BEGin
+
+declare f,g integer;
+
+declare k timestamp;
+
+declare exit handler for sqlexception
+
+begin
+
+select 'error occured';
+
+rollback;
+
+end;
+
+start transaction;
+
+select count(*) into f from iocl.iocl_bc_bayoperations where FanPin=fp and BayNum=bno;
+
+select StatusId into g from iocl_supported_bayoperationalstatus where OperationalStatus=st;
+
+select now() into k;
+
+if(f>0) then
+
+update iocl_bc_bayoperations set OperationalStatusId=g , BCUpdateTime=k where FanPin=fp and BayNum=bno;
+
+else 
+
+insert into iocl.iocl_bc_bayoperations(FanPin,OperationalStatusId,Baynum,BCInputTime)values(fp,g,bno,k);
+
+end if;
+
+#insert into iocl_bc_audit_bayoperations(FanPin,OperationalStatusId,Baynum,BCInputTime)values(fp,g,bno,k);
+
+commit;
+
+END$$
+DELIMITER ;

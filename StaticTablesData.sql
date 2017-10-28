@@ -56,3 +56,9 @@ insert into iocl_supported_contractorstatus values(2,'Not Active');
 
 insert into iocl_supported_locationstatus values(1,'Active');
 insert into iocl_supported_locationstatus values(2,'Not Active');
+
+insert into iocl_supported_bayoperationalstatus(StatusId,OperationalStatus) values (1,'InProgress');
+insert into iocl_supported_bayoperationalstatus(StatusId,OperationalStatus) values (2,'Pause');
+insert into iocl_supported_bayoperationalstatus(StatusId,OperationalStatus) values (3,'Terminate');
+insert into iocl_supported_bayoperationalstatus(StatusId,OperationalStatus) values (4,'ErrorOut');
+insert into iocl_supported_bayoperationalstatus(StatusId,OperationalStatus) values (5,'Completed');

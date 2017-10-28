@@ -1,0 +1,35 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLatestFanpinDetails`()
+BEGIN
+ declare
+ i,j integer;
+ declare present_time,y,expired_time datetime;
+ 
+ set i=1;
+ 
+ create temporary table temp_table(id int(11) auto_increment primary key,fp datetime);
+ create temporary table result_table(RecId int(11) auto_increment primary key,Fanid int(11),Fanpin varchar(45),BayNo int(11),fancreationtime datetime,flag varchar(45) default 'Not Expired');
+ 
+ insert into temp_table(fp) select min(FanCreationOn) from iocl_fanslip_details where FANPinStatusId=1 group by BayNo;
+ 
+ select count(*) into j from temp_table;
+ label1:loop
+ insert into result_table(Fanid,Fanpin,BayNo,fancreationtime)
+ select Fanid,FanPin,BayNo,FanCreationOn from iocl_fanslip_details where FanCreationOn=(select fp from temp_table where id=i);
+ 
+ select fp into y from temp_table where id=i;
+ set expired_time=date_add(y,interval 3 hour);
+ set present_time=now();
+ 
+ if(present_time>expired_time) then
+ update result_table set flag='Expired' where RecId=i;
+ end if;
+ set i=i+1;
+ if i<=j then
+ iterate label1;
+ end if;
+ leave label1;
+ end loop label1;
+ 
+  select * from result_table;
+  drop table temp_table,result_table;
+END

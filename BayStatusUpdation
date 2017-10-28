@@ -1,4 +1,3 @@
-DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `BayStatusUpdation`(in fp varchar(25),in st varchar(25),in bno int)
 BEGin
 
@@ -17,26 +16,25 @@ rollback;
 end;
 
 start transaction;
+SET SQL_SAFE_UPDATES=0;
+select count(*) into f from iocl_test.iocl_bc_bayoperations where FanPin=fp and BayNum=bno;
 
-select count(*) into f from iocl.iocl_bc_bayoperations where FanPin=fp and BayNum=bno;
-
-select StatusId into g from iocl_supported_bayoperationalstatus where OperationalStatus=st;
+select StatusId into g from iocl_test.iocl_supported_bayoperationalstatus where OperationalStatus=st;
 
 select now() into k;
 
 if(f>0) then
 
-update iocl_bc_bayoperations set OperationalStatusId=g , BCUpdateTime=k where FanPin=fp and BayNum=bno;
+update iocl_test.iocl_bc_bayoperations set OperationalStatusId=g , BCUpdateTime=k where FanPin=fp and BayNum=bno;
 
 else 
 
-insert into iocl.iocl_bc_bayoperations(FanPin,OperationalStatusId,Baynum,BCInputTime)values(fp,g,bno,k);
+insert into iocl_test.iocl_bc_bayoperations(FanPin,OperationalStatusId,Baynum,BCInputTime)values(fp,g,bno,k);
 
 end if;
 
-#insert into iocl_bc_audit_bayoperations(FanPin,OperationalStatusId,Baynum,BCInputTime)values(fp,g,bno,k);
+insert into iocl_test.iocl_bc_audit_bayoperations(FanPin,OperationalStatus,Baynum,BCInputTime)values(fp,g,bno,k);
 
+SET SQL_SAFE_UPDATES=1;
 commit;
-
-END$$
-DELIMITER ;
+END

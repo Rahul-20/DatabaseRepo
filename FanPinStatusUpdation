@@ -1,4 +1,3 @@
-DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FanPinStatusUpdation`(in fp varchar(25),in st varchar(25),in bno int)
 BEGIN
 declare i integer;
@@ -8,8 +7,9 @@ declare exit handler for sqlwarning
 		rollback;
 	end;
 		start transaction;
-		select StatusId into i from iocl_supported_pinstatus where FanPinStatus=st;
-		update iocl_fanslip_details set FanPinStatusId=i where FanPin=fp and BayNo=bno;
+		select StatusId into i from iocl_test.iocl_supported_pinstatus where FanPinStatus=st;
+         SET SQL_SAFE_UPDATES=0;
+		update iocl_test.iocl_fanslip_details set FanPinStatusId=i where FanPin=fp and BayNo=bno;
 	commit;
-END$$
-DELIMITER ;
+    SET SQL_SAFE_UPDATES=1;
+END

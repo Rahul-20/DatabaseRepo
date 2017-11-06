@@ -92,12 +92,15 @@ CREATE TABLE `iocl_user_details` (
   `UserCreatedOn` datetime DEFAULT NULL,
   `UserUpdatedOn` datetime DEFAULT NULL,
   `UserDeletedOn` datetime DEFAULT NULL,
+  `UserUpdatedBy` int(11) DEFAULT NULL,
+  `UserCreatedBy` int(11) DEFAULT NULL,
   `UserStatusId` int(11) NOT NULL,
   `PwdExpiryDate` datetime NOT NULL,
   PRIMARY KEY (`UserId`),
   KEY `UserStatusId` (`UserStatusId`),
   CONSTRAINT `iocl_user_details_ibfk_1` FOREIGN KEY (`UserStatusId`) REFERENCES `iocl_supported_userstatus` (`StatusId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `iocl_userrole_mapping` (
   `RecId` int(11) NOT NULL AUTO_INCREMENT,
@@ -135,6 +138,10 @@ CREATE TABLE `iocl_contractor_details` (
   `ContractorStateId` int(11) NOT NULL,
   `ZipCode` varchar(25) DEFAULT NULL,
   `ContractorStatusId` int(11) NOT NULL,
+  `ContractorUpdatedBy` int(11) DEFAULT NULL,
+  `ContractorCreatedBy` int(11) DEFAULT NULL,
+  `ContractorUpdatedOn` datetime DEFAULT NULL,
+  `ContractorCreatedOn` datetime DEFAULT NULL,
   PRIMARY KEY (`ContractorId`),
   KEY `ContractorStatusId` (`ContractorStatusId`),
   KEY `ContractorTypeId` (`ContractorTypeId`),
@@ -142,7 +149,8 @@ CREATE TABLE `iocl_contractor_details` (
   CONSTRAINT `iocl_contractor_details_ibfk_1` FOREIGN KEY (`ContractorStatusId`) REFERENCES `iocl_supported_contractorstatus` (`StatusId`),
   CONSTRAINT `iocl_contractor_details_ibfk_2` FOREIGN KEY (`ContractorTypeId`) REFERENCES `iocl_contractortype_details` (`ContractorTypeId`),
   CONSTRAINT `iocl_contractor_details_ibfk_3` FOREIGN KEY (`ContractorStateId`) REFERENCES `iocl_states_details` (`StateId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `iocl_location_details` (
   `LocationID` int(11) NOT NULL AUTO_INCREMENT,
@@ -153,12 +161,16 @@ CREATE TABLE `iocl_location_details` (
   `City` varchar(50) DEFAULT NULL,
   `PinCode` varchar(50) DEFAULT NULL,
   `StateId` int(11) DEFAULT NULL,
+  `LocationUpdatedBy` int(11) DEFAULT NULL,
+  `LocationCreatedBy` int(11) DEFAULT NULL,
+  `LocationUpdatedOn` datetime DEFAULT NULL,
+  `LocationCreatedOn` datetime DEFAULT NULL,
   PRIMARY KEY (`LocationID`),
   KEY `LocationStatusId` (`LocationStatusId`),
   KEY `StateId` (`StateId`),
   CONSTRAINT `iocl_location_details_ibfk_1` FOREIGN KEY (`LocationStatusId`) REFERENCES `iocl_supported_locationstatus` (`StatusId`),
   CONSTRAINT `iocl_location_details_ibfk_2` FOREIGN KEY (`StateId`) REFERENCES `iocl_states_details` (`StateId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `iocl_quantities_details` (
   `QuantityId` int(11) NOT NULL AUTO_INCREMENT,
@@ -166,10 +178,14 @@ CREATE TABLE `iocl_quantities_details` (
   `Quantity` varchar(25) DEFAULT NULL,
   `QuantityUnits` varchar(25) DEFAULT NULL,
   `QuantityStatusId` int(11) DEFAULT NULL,
+  `QuantityUpdatedBy` int(11) DEFAULT NULL,
+  `QuantityCreatedBy` int(11) DEFAULT NULL,
+  `QuantityUpdatedOn` datetime DEFAULT NULL,
+  `QuantityCreatedOn` datetime DEFAULT NULL,
   PRIMARY KEY (`QuantityId`),
   KEY `QuantityStatusId` (`QuantityStatusId`),
   CONSTRAINT `iocl_quantities_details_ibfk_1` FOREIGN KEY (`QuantityStatusId`) REFERENCES `iocl_supported_quantitystatus` (`StatusId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `iocl_bc_bayoperations` (
   `RecId` int(11) NOT NULL AUTO_INCREMENT,
@@ -224,17 +240,23 @@ CREATE TABLE `iocl_fanslip_details` (
   `Destination` varchar(50) NOT NULL,
   `LocationID` int(11) NOT NULL,
   `ContractorID` int(11) NOT NULL,
+  `QuantityID` int(11) NOT NULL,
   `FANPinStatusId` int(11) NOT NULL,
   `FanUpdatedBy` int(11) DEFAULT NULL,
   `FanCreatedBy` int(11) NOT NULL,
   `FanUpdatedOn` datetime DEFAULT NULL,
   `FanCreationOn` datetime NOT NULL,
   `FanExpirationOn` datetime NOT NULL,
+  `bcinputtime` datetime DEFAULT NULL,
+  `bccompletedtime` datetime DEFAULT NULL,
+  `comments` varchar(5000) DEFAULT NULL,
   PRIMARY KEY (`FanId`),
   KEY `ContractorID` (`ContractorID`),
   KEY `LocationID` (`LocationID`),
   KEY `FANPinStatusId` (`FANPinStatusId`),
+  KEY `iocl_fanslip_details_ibfk_4` (`QuantityID`),
   CONSTRAINT `iocl_fanslip_details_ibfk_1` FOREIGN KEY (`ContractorID`) REFERENCES `iocl_contractor_details` (`ContractorId`),
   CONSTRAINT `iocl_fanslip_details_ibfk_2` FOREIGN KEY (`LocationID`) REFERENCES `iocl_location_details` (`LocationID`),
-  CONSTRAINT `iocl_fanslip_details_ibfk_3` FOREIGN KEY (`FANPinStatusId`) REFERENCES `iocl_supported_pinstatus` (`StatusId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+  CONSTRAINT `iocl_fanslip_details_ibfk_3` FOREIGN KEY (`FANPinStatusId`) REFERENCES `iocl_supported_pinstatus` (`StatusId`),
+  CONSTRAINT `iocl_fanslip_details_ibfk_4` FOREIGN KEY (`QuantityID`) REFERENCES `iocl_quantities_details` (`QuantityId`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;

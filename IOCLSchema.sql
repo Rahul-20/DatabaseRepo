@@ -195,6 +195,9 @@ CREATE TABLE `iocl_bc_bayoperations` (
   `BayNum` int(11) NOT NULL,
   `OperationalStatusId` int(11) DEFAULT NULL,
   `BcControllerId` varchar(50) DEFAULT NULL,
+  `LoadedQuantity` varchar(225) DEFAULT NULL,
+  `Totalizerstartvalue` varchar(225) DEFAULT NULL,
+  `Totalizerendvalue` varchar(225) DEFAULT NULL,
   PRIMARY KEY (`RecId`),
   KEY `OperationalStatusId` (`OperationalStatusId`),
   CONSTRAINT `iocl_bc_bayoperations_ibfk_1` FOREIGN KEY (`OperationalStatusId`) REFERENCES `iocl_supported_bayoperationalstatus` (`StatusId`)
@@ -250,6 +253,7 @@ CREATE TABLE `iocl_fanslip_details` (
   `bcinputtime` datetime DEFAULT NULL,
   `bccompletedtime` datetime DEFAULT NULL,
   `comments` varchar(5000) DEFAULT NULL,
+  `TransformedPreset` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`FanId`),
   KEY `ContractorID` (`ContractorID`),
   KEY `LocationID` (`LocationID`),
